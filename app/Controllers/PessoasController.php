@@ -111,24 +111,6 @@ class PessoasController
             return;
         }
 
-        if ($curso === '') {
-            http_response_code(400);
-            echo json_encode(['erro' => 'Curso não pode ser vazio.']);
-            return;
-        }
-
-        if ($periodo === '') {
-            http_response_code(400);
-            echo json_encode(['erro' => 'Período não pode ser vazio.']);
-            return;
-        }
-
-        if ($observacoes === '') {
-            http_response_code(400);
-            echo json_encode(['erro' => 'Observações não pode ser vazio.']);
-            return;
-        }
-
         if (!in_array($status, ['ativo', 'inativo'], true)) {
             http_response_code(400);
             echo json_encode(['erro' => 'Status inválido.']);
@@ -195,24 +177,6 @@ class PessoasController
         if ($telefone !== '' && !$this->telefoneValido($telefone)) {
             http_response_code(400);
             echo json_encode(['erro' => 'Telefone inválido. Informe no formato +XXXXXXXXXXXXX']);
-            return;
-        }
-
-        if ($curso === '') {
-            http_response_code(400);
-            echo json_encode(['erro' => 'Curso não pode ser vazio.']);
-            return;
-        }
-
-        if ($periodo === '') {
-            http_response_code(400);
-            echo json_encode(['erro' => 'Período não pode ser vazio.']);
-            return;
-        }
-
-        if ($observacoes === '') {
-            http_response_code(400);
-            echo json_encode(['erro' => 'Observações não pode ser vazio.']);
             return;
         }
 
