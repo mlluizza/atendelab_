@@ -1,0 +1,17 @@
+# Sistema Operacional
+.DS_Store
+Thumbs.ds
+
+# Dependencias
+/vendor/
+/node_modules/
+
+# Ambiente
+.env
+
+# Logs
+*.log
+
+# Arquivos teporários
+*.tmp
+*.bak
