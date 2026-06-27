@@ -184,10 +184,10 @@ class UsuariosController
             $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
 
-            echo json_encode(['mensagem' => 'Usuário atualizado com sucesso.'], JSON_UNESCAPED_UNICODE);
+            echo json_encode(['mensagem' => 'Usuário deletado com sucesso.'], JSON_UNESCAPED_UNICODE);
         } catch (PDOException $e) {
             http_response_code(500);
-            echo json_encode(['erro' => 'Erro ao atualizar usuário.']);
+            echo json_encode(['erro' => 'Erro ao deletar usuário.']);
         }
     }
 }
