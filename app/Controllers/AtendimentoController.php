@@ -189,7 +189,7 @@ class AtendimentoController
         }
     }
 
-    public function exluir(): void
+    public function excluir(): void
     {
         header(self::CONTENT_HEADER);
 

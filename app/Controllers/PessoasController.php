@@ -221,7 +221,7 @@ class PessoasController
         }
     }
 
-    public function exluir(): void {
+    public function excluir(): void {
         header(self::CONTENT_HEADER);
 
         $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);

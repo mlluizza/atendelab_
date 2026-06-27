@@ -57,7 +57,7 @@ if ($controller === 'usuarios') {
             break;
 
         case 'excluir':
-            $pessoasController->exluir();
+            $pessoasController->excluir();
             break;
 
         default:
@@ -85,7 +85,7 @@ if ($controller === 'usuarios') {
             break;
 
         case 'excluir':
-            $tipoAtendimentosController->exluir();
+            $tipoAtendimentosController->excluir();
             break;
 
         default:
@@ -113,7 +113,7 @@ if ($controller === 'usuarios') {
             break;
 
         case 'excluir':
-            $atendimentoController->exluir();
+            $atendimentoController->excluir();
             break;
 
         default:
