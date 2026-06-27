@@ -179,15 +179,15 @@ class UsuariosController
         }
 
         try {
-            $sql = 'DELETE FROM usuarios WHERE id = :id';
+            $sql = 'UPDATE usuarios SET status = "inativo" WHERE id = :id';
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
 
-            echo json_encode(['mensagem' => 'Usuário deletado com sucesso.'], JSON_UNESCAPED_UNICODE);
+            echo json_encode(['mensagem' => 'Usuário inativado com sucesso.'], JSON_UNESCAPED_UNICODE);
         } catch (PDOException $e) {
             http_response_code(500);
-            echo json_encode(['erro' => 'Erro ao deletar usuário.']);
+            echo json_encode(['erro' => 'Erro ao inativar usuário.']);
         }
     }
 }
