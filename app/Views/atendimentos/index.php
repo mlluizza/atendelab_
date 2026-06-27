@@ -264,11 +264,10 @@ require __DIR__ . '/../layouts/header.php';
                     </td>
                     <td class="text-end">
                         <button
+                            type="button"
                             class="btn btn-sm btn-outline-primary"
-                            onclick="abrirStatus(
-                            ${Number(atendimento.id)},
-                            '${AtendeLabApi.escapeAttr(atendimento.status)}'
-                        )">
+                            data-id="${Number(atendimento.id)}"
+                            onclick="abrirStatus(this.dataset.id)">
                             Status
                         </button>
                     </td>
@@ -298,12 +297,20 @@ require __DIR__ . '/../layouts/header.php';
         }
     });
 
-    function abrirStatus(id, status) {
-        document.getElementById('statusId').value = id;
-        document.querySelector('#formStatus [name="status"]').value =
-            status || 'aberto';
-        document.querySelector('#formStatus [name="observacao_final"]').value = '';
-        statusModal().show();
+    async function abrirStatus(id) {
+        try {
+            const atendimento = AtendeLabApi.toObject(
+                await AtendeLabApi.get('atendimentos', 'buscarPorId', { id })
+            );
+            document.getElementById('statusId').value = id;
+            document.querySelector('#formStatus [name="status"]').value =
+                atendimento.status || 'aberto';
+            document.querySelector('#formStatus [name="observacao_final"]').value =
+                atendimento.observacao_final ?? '';
+            statusModal().show();
+        } catch (error) {
+            AtendeLabApi.showAlert('alerta', error.message, 'danger');
+        }
     }
     document.getElementById('formStatus').addEventListener('submit', async event => {
         event.preventDefault();

@@ -25,6 +25,7 @@ class AtendimentoController
                        a.status,
                        a.data_atendimento,
                        a.horario_atendimento,
+                       a.observacao_final,
                        a.criado_em,
                        p.nome AS pessoa_nome,
                        t.nome AS tipo_atendimento,
@@ -78,18 +79,30 @@ class AtendimentoController
     {
         header(self::CONTENT_HEADER);
 
+        require_once __DIR__ . '/../Middlewares/auth.php';
+
         $pessoa_id = filter_input(INPUT_POST, 'pessoa_id', FILTER_VALIDATE_INT);
-        $tipos_atendimento_id = filter_input(INPUT_POST, 'tipos_atendimento_id', FILTER_VALIDATE_INT);
-        $usuario_id = filter_input(INPUT_POST, 'usuario_id', FILTER_VALIDATE_INT);
+        $tipos_atendimento_id = filter_input(INPUT_POST, 'tipos_atendimento_id', FILTER_VALIDATE_INT)
+            ?: filter_input(INPUT_POST, 'tipo_atendimento_id', FILTER_VALIDATE_INT);
         $descricao = trim($_POST['descricao'] ?? '');
         $status = trim($_POST['status'] ?? 'aberto');
         $data_atendimento = trim($_POST['data_atendimento'] ?? '');
         $horario_atendimento = trim($_POST['horario_atendimento'] ?? '');
         $observacao_final = trim($_POST['observacao_final'] ?? '');
 
-        if (!$pessoa_id || !$tipos_atendimento_id || !$usuario_id || $descricao === '' || $data_atendimento === '' || $horario_atendimento === '') {
+        $usuario = usuarioAtual();
+        $usuario_id = filter_input(INPUT_POST, 'usuario_id', FILTER_VALIDATE_INT)
+            ?: (int) ($usuario['id'] ?? 0);
+
+        if (!$usuario_id) {
+            http_response_code(401);
+            echo json_encode(['erro' => 'Usuário não autenticado']);
+            return;
+        }
+
+        if (!$pessoa_id || !$tipos_atendimento_id || $descricao === '' || $data_atendimento === '' || $horario_atendimento === '') {
             http_response_code(400);
-            echo json_encode(['erro' => 'Pessoa, tipo, usuário, descrição, data e horário são obrigatórios']);
+            echo json_encode(['erro' => 'Pessoa, tipo, descrição, data e horário são obrigatórios']);
             return;
         }
 
