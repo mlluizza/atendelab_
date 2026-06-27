@@ -66,5 +66,5 @@ INSERT INTO usuarios (nome, email, senha, perfil, status)
         'ativo'
     );
 
-
-
+ALTER TABLE usuarios
+MODIFY perfil ENUM('admin', 'aluno', 'atendente') DEFAULT 'atendente';
