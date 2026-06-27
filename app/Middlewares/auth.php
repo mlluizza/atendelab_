@@ -1,12 +1,12 @@
 <?php
 
-if (session_status() !== PHP_SESSION_ACTIVE) {
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 function usuarioAutenticado(): bool 
 {
-    return isset($_SESSION['usuario_id'])
+    return isset($_SESSION['usuario'])
         && is_array($_SESSION['usuario']);
 }
 

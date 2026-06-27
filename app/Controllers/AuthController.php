@@ -94,7 +94,7 @@ class AuthController
 
         $usuario = usuarioAtual();
 
-        require __DIR__ . '/../Views/auth/dashboard.php';
+        require __DIR__ . '/../Views/dashboard/index.php';
     }
 
     public function logout(): void

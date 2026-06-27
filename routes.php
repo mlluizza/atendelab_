@@ -5,7 +5,7 @@ require_once __DIR__ . '/app/Controllers/AuthController.php';
 require_once __DIR__ . '/app/Controllers/PessoasController.php';
 require_once __DIR__ . '/app/Controllers/TipoAtendimentosController.php';
 require_once __DIR__ . '/app/Controllers/AtendimentoController.php';
-require_once __DIR__ . '/app/Middleware/auth.php';
+require_once __DIR__ . '/app/Middlewares/auth.php';
 
 $controller = $_GET['controller'] ?? 'auth';
 $action = $_GET['action'] ?? 'login';
