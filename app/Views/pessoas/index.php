@@ -120,21 +120,24 @@ require __DIR__ . '/../layouts/header.php';
                     AtendeLabApi.showAlert('alerta', error.message, 'danger');
                 }
             }
-            async function editarPessoa(id) {
-                try {
-                    const p = AtendeLabApi.toObject(await AtendeLabApi.get('pessoas', 'buscar', {
-                        id
-                    }));
-                    novaPessoa();
-                    document.getElementById('tituloFormulario').textContent = 'Editar pessoa';
-                    for (const [key, value] of Object.entries(p)) {
-                        const field = formPessoa.elements.namedItem(key);
-                        if (field) field.value = value ?? '';
-                    }
-                } catch (error) {
-                    AtendeLabApi.showAlert('alerta', error.message, 'danger');
+    async function editarPessoa(id) {
+        try {
+            const p = AtendeLabApi.toObject(await AtendeLabApi.get('pessoas', 'buscar', { id }));
+            formPessoa.reset();
+            document.getElementById('tituloFormulario').textContent = 'Editar pessoa';
+            document.getElementById('pessoaId').value = String(p.id);
+            for (const [key, value] of Object.entries(p)) {
+                if (key === 'criado_em' || key === 'atualizado_em') continue;
+                const field = formPessoa.elements.namedItem(key);
+                if (field && 'value' in field) {
+                    field.value = value ?? '';
                 }
             }
+            abrirFormulario();
+        } catch (error) {
+            AtendeLabApi.showAlert('alerta', error.message, 'danger');
+        }
+    }
             formPessoa.addEventListener('submit', async event => {
                         event.preventDefault();
                         const id = document.getElementById('pessoaId').value;

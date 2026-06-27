@@ -189,6 +189,51 @@ class AtendimentoController
         }
     }
 
+    public function alterarStatus(): void
+    {
+        header(self::CONTENT_HEADER);
+
+        $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+        $status = trim($_POST['status'] ?? '');
+        $observacao_final = trim($_POST['observacao_final'] ?? '');
+
+        if (!$id) {
+            http_response_code(400);
+            echo json_encode(['erro' => 'ID inválido']);
+            return;
+        }
+
+        if (!in_array($status, ['aberto', 'em_andamento', 'concluido'], true)) {
+            http_response_code(400);
+            echo json_encode(['erro' => 'Status inválido.']);
+            return;
+        }
+
+        if ($status === 'concluido' && $observacao_final === '') {
+            http_response_code(400);
+            echo json_encode(['erro' => 'Observação final é obrigatória ao concluir.']);
+            return;
+        }
+
+        try {
+            $sql = 'UPDATE atendimentos
+                    SET status = :status,
+                        observacao_final = :observacao_final
+                    WHERE id = :id';
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindValue(':status', $status);
+            $stmt->bindValue(':observacao_final', $observacao_final);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            echo json_encode(['mensagem' => 'Status atualizado com sucesso'], JSON_UNESCAPED_UNICODE);
+        } catch (PDOException $e) {
+            http_response_code(500);
+            echo json_encode(['erro' => 'Erro ao alterar status do atendimento']);
+        }
+    }
+
     public function excluir(): void
     {
         header(self::CONTENT_HEADER);

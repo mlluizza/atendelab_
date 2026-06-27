@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/app/Controllers/UsuariosController.php';
 require_once __DIR__ . '/app/Controllers/AuthController.php';
+require_once __DIR__ . '/app/Controllers/FrontendController.php';
 require_once __DIR__ . '/app/Controllers/PessoasController.php';
 require_once __DIR__ . '/app/Controllers/TipoAtendimentosController.php';
 require_once __DIR__ . '/app/Controllers/AtendimentoController.php';
@@ -34,6 +35,28 @@ switch ($controller) {
             default:
                 http_response_code(404);
                 echo 'Ação de autenticação não encontrada.';
+        }
+        break;
+
+    case 'frontend':
+        $frontendController = new FrontendController();
+
+        switch ($action) {
+            case 'pessoas':
+                $frontendController->pessoas();
+                break;
+
+            case 'tipos':
+                $frontendController->tiposAtendimentos();
+                break;
+
+            case 'atendimentos':
+                $frontendController->atendimentos();
+                break;
+
+            default:
+                http_response_code(404);
+                echo 'Ação do frontend não encontrada.';
         }
         break;
 
@@ -77,6 +100,7 @@ switch ($controller) {
                 $pessoasController->listar();
                 break;
 
+            case 'buscar':
             case 'buscarPorId':
                 $pessoasController->buscarPorId();
                 break;
@@ -89,12 +113,17 @@ switch ($controller) {
                 $pessoasController->atualizar();
                 break;
 
+            case 'inativar':
+                $pessoasController->excluir();
+                break;
+
             default:
                 http_response_code(404);
                 echo 'Ação de pessoas não encontrada.';
         }
         break;
 
+    case 'tipos':
     case 'tipos_atendimentos':
         exigirAutenticacao();
         $tipoAtendimentosController = new TipoAtendimentosController();
@@ -104,6 +133,7 @@ switch ($controller) {
                 $tipoAtendimentosController->listar();
                 break;
 
+            case 'buscar':
             case 'buscarPorId':
                 $tipoAtendimentosController->buscarPorId();
                 break;
@@ -116,6 +146,7 @@ switch ($controller) {
                 $tipoAtendimentosController->atualizar();
                 break;
 
+            case 'inativar':
             case 'excluir':
                 $tipoAtendimentosController->excluir();
                 break;
@@ -141,6 +172,10 @@ switch ($controller) {
 
             case 'criar':
                 $atendimentoController->criar();
+                break;
+
+            case 'alterarStatus':
+                $atendimentoController->alterarStatus();
                 break;
 
             case 'atualizar':

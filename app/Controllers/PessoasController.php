@@ -37,7 +37,7 @@ class PessoasController
     {
         header(self::CONTENT_HEADER);
 
-        $sql = 'SELECT id, nome, curso, periodo, status, criado_em
+        $sql = 'SELECT id, nome, documento, email, curso, periodo, status, criado_em
                 FROM pessoas
                 ORDER BY id ASC';
 
@@ -105,7 +105,7 @@ class PessoasController
             return;
         }
 
-        if ($telefone === '' && !$this->telefoneValido($telefone)) {
+        if ($telefone !== '' && !$this->telefoneValido($telefone)) {
             http_response_code(400);
             echo json_encode(['erro' => 'Telefone inválido. Informe no formato +XXXXXXXXXXXXX']);
             return;
@@ -192,7 +192,7 @@ class PessoasController
                         documento = :documento,
                         telefone = :telefone,
                         email = :email,
-                        curso = :perfil,
+                        curso = :curso,
                         periodo = :periodo,
                         observacoes = :observacoes,
                         status = :status
@@ -210,14 +210,14 @@ class PessoasController
             $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
 
-            http_response_code(201);
+            http_response_code(200);
             echo json_encode([
-                'messagem' => 'Pessoa cadastrado com sucesso',
-                'id' => $this->pdo->lastInsertId()
+                'mensagem' => 'Pessoa atualizada com sucesso',
+                'id' => $id
             ], JSON_UNESCAPED_UNICODE);
         } catch (PDOException $e) {
             http_response_code(500);
-            echo json_encode(['erro' => 'Erro ao Cadastrar Pessoa']);
+            echo json_encode(['erro' => 'Erro ao atualizar pessoa']);
         }
     }
 
