@@ -10,30 +10,6 @@ require __DIR__ . '/../layouts/header.php';
     <button class="btn btn-success" type="button" onclick="novoTipo()">Novo tipo</button>
 </div>
 <div id="alerta"></div>
-<div class="card border-0 shadow-sm mb-4 d-none" id="cardFormulario">
-    <div class="card-body">
-        <h2 class="h5" id="tituloFormulario">Novo tipo</h2>
-        <form id="formTipo">
-            <input type="hidden" name="id" id="tipoId">
-            <div class="row g-3">
-                <div class="col-md-6"><label class="form-label">Nome *</label><input
-                        class="form-control" name="nome"
-                        required></div>
-                <div class="col-md-3"><label class="form-label">Status</label><select
-                        class="form-select" name="status">
-                        <option value="ativo">Ativo</option>
-                        <option value="inativo">Inativo</option>
-                    </select></div>
-                <div class="col-12"><label class="form-label">Descrição</label><textarea
-                        class="form-control"
-                        name="descricao" rows="2"></textarea></div>
-            </div>
-            <div class="d-flex gap-2 mt-3"><button class="btn btn-success">Salvar</button><button
-                    class="btn btn-outline-secondary" type="button"
-                    onclick="fecharFormulario()">Cancelar</button></div>
-        </form>
-    </div>
-</div>
 <div class="card border-0 shadow-sm">
     <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
@@ -53,29 +29,67 @@ require __DIR__ . '/../layouts/header.php';
         </table>
     </div>
 </div>
+<div class="modal fade" id="modalTipo" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5" id="tituloFormulario">Novo tipo</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formTipo">
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="tipoId">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label">Nome *</label>
+                            <input class="form-control" name="nome" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" name="status">
+                                <option value="ativo">Ativo</option>
+                                <option value="inativo">Inativo</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Descrição</label>
+                            <textarea class="form-control" name="descricao" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button class="btn btn-success" type="submit">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <script>
     const formTipo = document.getElementById('formTipo');
-    const cardFormulario = document.getElementById('cardFormulario');
     const tabelaTipos = document.getElementById('tabelaTipos');
     const campoTipoId = document.getElementById('tipoId');
     const tituloFormulario = document.getElementById('tituloFormulario');
 
+    const tipoModal = () => bootstrap.Modal.getOrCreateInstance(
+        document.getElementById('modalTipo')
+    );
+
     function abrirFormulario() {
-        cardFormulario.classList.remove('d-none');
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
+        tipoModal().show();
     }
 
     function fecharFormulario() {
-        cardFormulario.classList.add('d-none');
+        tipoModal().hide();
         formTipo.reset();
         campoTipoId.value = '';
     }
 
     function novoTipo() {
-        fecharFormulario();
+        formTipo.reset();
+        campoTipoId.value = '';
         tituloFormulario.textContent = 'Novo tipo';
         abrirFormulario();
     }
@@ -140,27 +154,22 @@ require __DIR__ . '/../layouts/header.php';
     }
     async function editarTipo(id) {
         try {
-            const resposta = await AtendeLabApi.get(
-                'tipos',
-                'buscar', {
-                    id
-                }
+            const tipo = AtendeLabApi.toObject(
+                await AtendeLabApi.get('tipos', 'buscar', { id })
             );
-            const tipo = AtendeLabApi.toObject(resposta);
-            novoTipo();
+            formTipo.reset();
             tituloFormulario.textContent = 'Editar tipo';
+            campoTipoId.value = String(tipo.id);
             for (const [nomeCampo, valorCampo] of Object.entries(tipo)) {
+                if (nomeCampo === 'criado_em' || nomeCampo === 'atualizado_em') continue;
                 const campo = formTipo.elements.namedItem(nomeCampo);
-                if (campo) {
+                if (campo && 'value' in campo) {
                     campo.value = valorCampo ?? '';
                 }
             }
+            abrirFormulario();
         } catch (error) {
-            AtendeLabApi.showAlert(
-                'alerta',
-                error.message,
-                'danger'
-            );
+            AtendeLabApi.showAlert('alerta', error.message, 'danger');
         }
     }
     formTipo.addEventListener('submit', async (event) => {
