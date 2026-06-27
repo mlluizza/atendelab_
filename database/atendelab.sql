@@ -66,5 +66,16 @@ INSERT INTO usuarios (nome, email, senha, perfil, status)
         'ativo'
     );
 
+INSERT INTO tipos_atendimentos (nome, descricao, status) VALUES
+('Dúvida acadêmica', 'Dúvidas sobre disciplinas, conteúdos e atividades.', 'ativo'),
+('Orientação de atividade', 'Orientações sobre trabalhos, TCC e projetos.', 'ativo'),
+('Suporte técnico', 'Problemas com sistemas, equipamentos e acessos.', 'ativo'),
+('Matrícula e documentação', 'Solicitações de matrícula, declarações e históricos.', 'ativo'),
+('Acesso ao laboratório', 'Liberação de uso e agendamento de laboratórios.', 'ativo');
+
+INSERT INTO pessoas (nome, documento, telefone, email, curso, periodo, status) VALUES
+('João da Silva', '12345678900', '+5547999990001', 'joao.silva@exemplo.com', 'Engenharia de Software', '5º', 'ativo'),
+('Ana Carolina', '98765432100', '+5547999990002', 'ana.carolina@exemplo.com', 'Sistemas de Informação', '7º', 'ativo');
+
 ALTER TABLE usuarios
 MODIFY perfil ENUM('admin', 'aluno', 'atendente') DEFAULT 'atendente';
