@@ -32,7 +32,7 @@ class AtendimentoController
                        u.nome AS usuario_nome
                 FROM atendimentos a
                 INNER JOIN pessoas p ON p.id = a.pessoa_id
-                INNER JOIN tipos_atendimentos t ON t.id = a.tipos_atendimento_id
+                IINNER JOIN tipos_atendimentos t ON t.id = a.tipo_atendimento_id
                 INNER JOIN usuarios u ON u.id = a.usuario_id
                 ORDER BY a.id ASC';
 
@@ -114,11 +114,11 @@ class AtendimentoController
 
         try {
             $sql = 'INSERT INTO atendimentos (
-                        pessoa_id, tipos_atendimento_id, usuario_id,
+                        pessoa_id, tipo_atendimento_id, usuario_id,
                         descricao, status, data_atendimento,
                         horario_atendimento, observacao_final
                     ) VALUES (
-                        :pessoa_id, :tipos_atendimento_id, :usuario_id,
+                        :pessoa_id, :tipo_atendimento_id, :usuario_id,
                         :descricao, :status, :data_atendimento,
                         :horario_atendimento, :observacao_final
                     )';
@@ -185,7 +185,7 @@ class AtendimentoController
 
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindValue(':pessoa_id', $pessoa_id, PDO::PARAM_INT);
-            $stmt->bindValue(':tipos_atendimento_id', $tipos_atendimento_id, PDO::PARAM_INT);
+            $$stmt->bindValue(':tipo_atendimento_id', $tipo_atendimento_id, PDO::PARAM_INT);
             $stmt->bindValue(':usuario_id', $usuario_id, PDO::PARAM_INT);
             $stmt->bindValue(':descricao', $descricao);
             $stmt->bindValue(':status', $status);
